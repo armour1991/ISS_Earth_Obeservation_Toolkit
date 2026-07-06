@@ -55,11 +55,12 @@ M, mask = cv2.estimateAffinePartial2D(
     pts2,
     method=cv2.RANSAC
 )
-
 print(M)
 
 tx = M[0,2]
 ty = M[1,2]
 
+print(f"tx = {M[0,2]:.2f}")
+print(f"ty = {M[1,2]:.2f}")
 pixel_shift = np.sqrt(tx**2 + ty**2)
 print(pixel_shift)

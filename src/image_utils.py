@@ -29,6 +29,7 @@ def match_features(img1, img2, kp1, kp2, des1, des2):
 
     matches = bf.match(des1, des2)
     matches = sorted(matches, key=lambda x: x.distance)
+    matches = matches[:200]
 
     matched_image = cv2.drawMatches(
         img1,
@@ -43,7 +44,7 @@ def match_features(img1, img2, kp1, kp2, des1, des2):
     return matches, matched_image
 
 
-def display_matches(matched_image, scale=0.2):
+def display_matches(matched_image, scale=0.1):
     new_width = int(matched_image.shape[1] * scale)
     new_height = int(matched_image.shape[0] * scale)
 
@@ -60,7 +61,7 @@ def display_matches(matched_image, scale=0.2):
 
 def calculate_pixel_shift(kp1, kp2, matches):
     pts1 = np.float32([kp1[m.queryIdx].pt for m in matches])
-    pts2 = np.float32([kp2[m.queryIdx].pt for m in matches])
+    pts2 = np.float32([kp2[m.trainIdx].pt for m in matches])
 
     M, mask = cv2.estimateAffinePartial2D(
         pts1,
@@ -72,5 +73,5 @@ def calculate_pixel_shift(kp1, kp2, matches):
     ty = M[1, 2]
 
     pixel_shift = np.sqrt(tx**2 + ty**2)
-
+    
     return pixel_shift, M
