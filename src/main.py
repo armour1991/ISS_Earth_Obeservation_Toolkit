@@ -1,6 +1,8 @@
 from config import *
 from image_utils import *
 from geo import *
+from metadata import * 
+from speed import *
 
 img1, img2, gray1, gray2 = load_images(
     "C:/Amritbir_1024150159/ISS Earth Observation Toolkit/Data/raw_images/image1.jpg",
@@ -45,3 +47,30 @@ ground_distance = pixels_to_distance(
 
 print(f"GSD = {gsd:.2f} m/pixel")
 print(f"Ground Distance: {ground_distance:.2f} metres")
+
+metadata1 = get_metadata(IMAGE1_PATH)
+metadata2 = get_metadata(IMAGE2_PATH)
+
+print("\n IMAGE 1 METADATA ")
+print(f"Timestamp : {metadata1['datetime']}")
+print(f"Latitude  : {metadata1['latitude']:.6f}")
+print(f"Longitude : {metadata1['longitude']:.6f}")
+
+print("\n IMAGE 2 METADATA ")
+print(f"Timestamp : {metadata2['datetime']}")
+print(f"Latitude  : {metadata2['latitude']:.6f}")
+print(f"Longitude : {metadata2['longitude']:.6f}")
+
+time_difference = (
+    metadata2["datetime"] - metadata1["datetime"]
+).total_seconds()
+
+print(f"\nTime Difference: {time_difference:.2f} seconds")
+
+iss_speed = calculate_speed(
+    ground_distance,
+    time_difference
+)
+
+print(f"Estimated ISS Speed: {iss_speed:.2f} m/s")
+print(f"Estimated ISS Speed: {iss_speed / 1000:.2f} km/s")
